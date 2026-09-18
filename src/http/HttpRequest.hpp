@@ -45,7 +45,6 @@ private:
     std::unordered_map<std::string, std::string> headers_;
 
     std::string body_;
-
 };
 
 

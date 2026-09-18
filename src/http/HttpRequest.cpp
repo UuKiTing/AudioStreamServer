@@ -6,7 +6,7 @@ namespace http{
     }
 
     const Method HttpRequest::getMethod() const{
-        return Method();
+        return method_;
     }
 
     void HttpRequest::setMethod(Method method) {

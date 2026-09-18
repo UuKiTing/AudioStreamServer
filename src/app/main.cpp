@@ -2,7 +2,8 @@
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
 #include "HttpParser.hpp"
-#include "MysqlDB.hpp"
+#include "Router.hpp"
+#include "DbManager.hpp"
 
 void onConnection(const net::TcpConnectionPtr& conn){
     conn->setHttpParser(http::HttpParser());
@@ -24,31 +25,17 @@ void onMessage(const net::TcpConnectionPtr& conn, net::Buffer* buf){
     if(parser->isCompeted()){
         const http::HttpRequest request = parser->getRequest();
 
-        std::cout << "[HTTP Request] Method: " << "GET"
-                  << " Path: " << request.getPath() << std::endl;
+        http::Router router(request);
 
-        std::string responseBody = "<html><body><h1>Hello World from Reactor!</h1></body></html>";
-        
-        std::string response = "HTTP/1.1 200 OK\r\n"
-                               "Content-Type: text/html\r\n"
-                               "Content-Length: " + std::to_string(responseBody.size()) + "\r\n"
-                               "Connection: keep-alive\r\n\r\n" + responseBody;
-
-        conn->send(response);
-
+        conn->send(router.handle());
         parser->reset();
     }
 }
 
 int main(){ 
-    auto& mysqlDb = db::MysqlDB::getInstance();
-    if(!mysqlDb.init(
-        "127.0.0.1",
-        "luo",
-        "123456",
-        "db"
-    )){
-        std::cout << "mysql connect failed\n";
+    db::DbManager &dbManager = db::DbManager::getInstance();
+    if(!dbManager.init("127.0.0.1", "luo", "123456", "db")){
+        std::cout << "msyql connect failed!\n";
         return -1;
     }
 

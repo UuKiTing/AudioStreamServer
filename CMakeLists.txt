@@ -18,6 +18,11 @@ file(GLOB_RECURSE CPP_SOURCES CONFIGURE_DEPENDS
 
 add_executable(${PROJECT_NAME} ${CPP_SOURCES})
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    RESOURCE_GROUPS="${CMAKE_CURRENT_SOURCE_DIR}/resource"
+)
+
+
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/c_core/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src/net
@@ -26,10 +31,13 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/db
 )
 
+find_package(nlohmann_json REQUIRED)
+
+
 target_link_libraries(${PROJECT_NAME} PRIVATE 
     pthread 
     dl
     c_core
-    mysqlcppconn
     mysqlclient
+    nlohmann_json::nlohmann_json
 )

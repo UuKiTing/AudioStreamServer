@@ -10,11 +10,11 @@ namespace db{
 
 class MysqlDB{
 public:
+    MysqlDB();
+    ~MysqlDB();
 
     MysqlDB(const MysqlDB&&) = delete;
     MysqlDB& operator=(const MysqlDB&&) = delete;
-
-    static MysqlDB& getInstance();
 
     // 初始化
     bool init(const std::string& host,
@@ -36,11 +36,7 @@ public:
     // 关闭连接
     void close();
 
-
 private:
-    MysqlDB();
-    ~MysqlDB();
-
     MYSQL *mysql_;
 
     bool connected_;

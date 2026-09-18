@@ -12,13 +12,6 @@ MysqlDB::~MysqlDB() {
     close();
 }
 
-
-MysqlDB& MysqlDB::getInstance() {
-    static MysqlDB instance;
-    return instance;
-}
-
-
 bool MysqlDB::init(const std::string& host, const std::string& user,
                        const std::string& passwd, const std::string& db,
                        unsigned int port) { 
@@ -52,7 +45,6 @@ bool MysqlDB::init(const std::string& host, const std::string& user,
         return false;
     }
 
-
     connected_ = true;
 
 
@@ -80,11 +72,11 @@ MYSQL_RES* MysqlDB::query(const std::string& sql) {
     if(!connected_) return nullptr;
 
 
-    if(mysql_query(mysql_, sql.c_str()) == 0){
+    if(mysql_query(mysql_, sql.c_str())){
         std::cerr << mysql_error(mysql_) << std::endl;
-
         return nullptr;
     }   
+
 
     return mysql_store_result(mysql_);
 }
