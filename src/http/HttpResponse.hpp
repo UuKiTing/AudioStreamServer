@@ -9,10 +9,12 @@ namespace http{
 
 enum HttpStatusCode {
     Ok = 200,
-    NotFound = 404,
+    Partial = 206,
     BadRequest = 400,
-    Partial = 206
+    NotFound = 404,
+    MethodNotAllowed = 406,	
 };
+
 
 class HttpResponse {
 public:
@@ -20,15 +22,23 @@ public:
 
     void addHeader(const std::string& key, const std::string& value);
 
+    void setDescribe(const std::string& describe);
+
     void setBody(const std::string& body);
 
     std::string buildResponse();
 
+    void reset();
+
+    void methodNotAllowed();
+
+    void notFound();
 
 private:
     std::unordered_map<std::string, std::string> headers_;
     HttpStatusCode statusCode_;
     std::string body_;
+    std::string describe_;
 };
 
 } // namespace http

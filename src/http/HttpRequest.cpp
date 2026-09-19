@@ -45,6 +45,14 @@ namespace http{
         body_ = body;
     }
 
+    const std::string HttpRequest::getSuffix() const {
+        return suffix_;
+    }
+
+    void HttpRequest::setSuffix(std::string suffix) {
+        suffix_ = suffix;
+    }
+
     const std::string HttpRequest::getHeader(const std::string& key) const{
         auto it = headers_.find(key);
         if(it != headers_.end()){
@@ -68,6 +76,7 @@ namespace http{
         headers_.clear();
         query_.clear();
         body_.clear();
+        suffix_.clear();
     }
 
 

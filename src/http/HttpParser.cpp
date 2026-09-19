@@ -105,9 +105,6 @@ namespace http {
         ss >> method >> url >> version;
 
         if(method == "GET") req_.setMethod(Method::Get);
-        else if(method == "POST") req_.setMethod(Method::Post);
-        else if(method == "PUT") req_.setMethod(Method::Put);
-        else if(method == "DELETE") req_.setMethod(Method::Delete);
         else return false;
 
         size_t pos = url.find("?");

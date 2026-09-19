@@ -18,7 +18,7 @@ class TcpConnection : public std::enable_shared_from_this<TcpConnection>{
 public:
     using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
     using ConnectionCallback = std::function<void(const TcpConnectionPtr&)>;
-    using MessageCallback = std::function<void(const TcpConnectionPtr&, Buffer*)>;
+    using RequestCallback = std::function<void(const TcpConnectionPtr&, Buffer*)>;
     using CloseCallback = std::function<void(const TcpConnectionPtr&)>;
 
     TcpConnection(EventLoop* loop, Socket socket, const std::string& client_ip, int client_port);
@@ -34,7 +34,7 @@ public:
 
     // 设置回调函数
     void setConnectionCallback(const ConnectionCallback& callBack);
-    void setMessageCallback(const MessageCallback& callBack);
+    void setRequestCallback(const RequestCallback& callBack);
     void setCloseCallback(const CloseCallback& callBack);
     
     // 向socket_发送数据
@@ -47,9 +47,9 @@ public:
     // 关闭
     void shutdown();
 
-    void setHttpParser(const std::any parser);
+    void setHttpParser(http::HttpParser *parser);
 
-    std::any* getHttpParser();
+    http::HttpParser* getHttpParser();
 
 
 private:
@@ -75,10 +75,10 @@ private:
     bool writeClosed_{false};
 
     ConnectionCallback connectionCallback_;
-    MessageCallback messageCallback_;
+    RequestCallback requestCallback_;
     CloseCallback closeCallback_; 
 
-    std::any parser_;    
+    http::HttpParser *parser_;    
 };
 
 using TcpConnectionPtr = std::shared_ptr<TcpConnection>;

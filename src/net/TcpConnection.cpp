@@ -1,4 +1,5 @@
 #include "TcpConnection.hpp"
+#include "HttpParser.hpp"
 #include "Socket.hpp"
 #include "EpollPoller.hpp"
 #include "EventLoop.hpp"
@@ -23,6 +24,10 @@ namespace net{
     }
 
     TcpConnection::~TcpConnection() {
+        if(parser_){
+            delete parser_;
+            parser_ = nullptr;
+        }
         std::cout << "[TcpConnection] Destroyed | fd: " << socket_.fd() << std::endl;
     }
 
@@ -50,8 +55,8 @@ namespace net{
         connectionCallback_ = callBack;
     }
 
-    void TcpConnection::setMessageCallback(const MessageCallback& callBack) {
-        messageCallback_ = callBack;
+    void TcpConnection::setRequestCallback(const RequestCallback& callBack) {
+        requestCallback_ = callBack;
     }
 
     void TcpConnection::setCloseCallback(const CloseCallback& callBack) {
@@ -101,12 +106,12 @@ namespace net{
         }
     }
 
-    void TcpConnection::setHttpParser(const std::any parser) {
+    void TcpConnection::setHttpParser(http::HttpParser *parser) {
         parser_ = parser;
     }
 
-    std::any* TcpConnection::getHttpParser() {
-        return &parser_;
+    http::HttpParser* TcpConnection::getHttpParser() {
+        return parser_;
     }
 
 
@@ -119,8 +124,8 @@ namespace net{
         ssize_t n = inputBuffer_.readDataInFd(socket_.fd(), &savedErrno);
         
         if(n > 0){
-            if(messageCallback_){
-                messageCallback_(shared_from_this(), &inputBuffer_);
+            if(requestCallback_){
+                requestCallback_(shared_from_this(), &inputBuffer_);
             }
         }
         else if(n == 0){

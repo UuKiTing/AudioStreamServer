@@ -29,6 +29,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/http
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pool
     ${CMAKE_CURRENT_SOURCE_DIR}/src/db
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/handler
 )
 
 find_package(nlohmann_json REQUIRED)

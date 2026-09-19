@@ -2,42 +2,30 @@
 #define ROUTER_HPP
 
 #include "HttpRequest.hpp"
-#include "HttpResponse.hpp"
+#include <functional>
+#include <set>
 
 
 namespace http{
 
-enum class ResourceType {Audio, Image, Lyrics};
-
-constexpr const char* toBaseDir(ResourceType type) {
-    switch (type) {
-        case ResourceType::Audio: return "resource/songAudio";
-        case ResourceType::Image: return "resource/songImage";
-        case ResourceType::Lyrics: return "resource/songLyrics";
-    }
-    return "";
-}
-
-
 class Router{
 public:
-    Router(const HttpRequest &request);
+    using Handler = std::function<std::string(HttpRequest&)>;
 
-    std::string handle();
+    Router();
+
+    void addRoute(const std::string& prefix, bool isHasSuffix, Method method, Handler handler);
+
+    std::string dispatch(HttpRequest req);
 
 private:
-    std::string handleGet();
-
     std::string matchPath(const std::string& path, const std::string& prefix);
 
-    std::string readFileData(const std::string& fileName, ResourceType  filePath);
+    std::unordered_map<std::string, Handler> routes_;
+    std::unordered_map<std::string, Method> methods_;
+    std::unordered_map<std::string, bool> isHasSuffixs_;
 
-    std::pair<int, int> parseRangeHeader(const std::string &rangeHeader, int totalSize);
-
-    Method method_ = Method::Get;
-    const std::string path_;
-
-    HttpRequest request_;
+    std::set<Method> allowedMethods_{Method::Get};
 };
 
 } // namespace http

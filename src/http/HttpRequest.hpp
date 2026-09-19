@@ -7,7 +7,7 @@
 
 namespace http{
 
-enum Method{Invaild, Get, Post, Put, Delete};
+enum Method{Invaild, Get};
 enum Version{UnKnown, Http10, Http11};
 
 class HttpRequest{
@@ -30,17 +30,19 @@ public:
     const std::string getBody() const;
     void setBody(std::string body);
 
+    const std::string getSuffix() const;
+    void setSuffix(std::string suffix);
+
     const std::string getHeader(const std::string& key) const;
     void addHeader(const std::string& key, const std::string& value);
 
     void reset();
-
-
 private:
     Method method_; // 请求方式
     std::string path_; // 请求路径
     Version version_; // HTTP版本
     std::string query_; // URL参数
+    std::string suffix_;
 
     std::unordered_map<std::string, std::string> headers_;
 

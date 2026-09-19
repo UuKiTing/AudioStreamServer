@@ -24,8 +24,8 @@ namespace net{
         connectionCallback_ = callBack;
     }
 
-    void TcpServer::setMessageCallback(MessageCallback callBack) {
-        messageCallback_ = callBack;
+    void TcpServer::setRequestCallback(RequestCallback callBack) {
+        requestCallback_ = callBack;
     }
 
     void TcpServer::newConnection(Socket client_soc, const std::string& ip, int port) {
@@ -35,11 +35,13 @@ namespace net{
 
         connections_[fd] = conn;
 
-        conn->setMessageCallback(messageCallback_);
+        conn->setRequestCallback(requestCallback_);
 
         conn->setCloseCallback(std::bind(&TcpServer::closeConnection, this, std::placeholders::_1));
 
         conn->connectEstablished();
+
+        conn->setHttpParser(new http::HttpParser());
 
         if(connectionCallback_){
             connectionCallback_(conn);

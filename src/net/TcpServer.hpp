@@ -13,7 +13,7 @@ namespace net{
 class TcpServer{
 public:
     using ConnectionCallback = std::function<void(const TcpConnectionPtr&)>;
-    using MessageCallback = std::function<void(const TcpConnectionPtr&, Buffer*)>;
+    using RequestCallback = std::function<void(const TcpConnectionPtr&, Buffer*)>;
 
 
     TcpServer(EventLoop* loop, const std::string& ip, uint16_t port, const std::string& name = "TcpServer");
@@ -26,7 +26,7 @@ public:
     void setConnectionCallback(ConnectionCallback callBack);
 
     // 设置回复对端的回调函数
-    void setMessageCallback(MessageCallback callBack);
+    void setRequestCallback(RequestCallback callBack);
 
 
 private:
@@ -40,9 +40,8 @@ private:
     std::unique_ptr<Acceptor> acceptor_;  
     ConnectionMap connections_;
 
-    MessageCallback messageCallback_;
+    RequestCallback requestCallback_;
     ConnectionCallback connectionCallback_;
-
 };
 
 }; // namespace net
