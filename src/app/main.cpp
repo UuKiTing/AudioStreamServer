@@ -35,6 +35,9 @@ void onRequest(const net::TcpConnectionPtr& conn, net::Buffer* buf){
 }
 
 int main(){
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
     router.addRoute("/songsJson", false, http::Method::Get, handler::readSongsMetadata);
     router.addRoute("/songAudio", true, http::Method::Get, handler::readSongAudio);
     router.addRoute("/songImage", true, http::Method::Get, handler::readSongImage);

@@ -13,6 +13,7 @@ enum HttpStatusCode {
     BadRequest = 400,
     NotFound = 404,
     MethodNotAllowed = 406,	
+    RangeNotSatisfiable = 416
 };
 
 

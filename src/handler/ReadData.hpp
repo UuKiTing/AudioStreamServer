@@ -25,13 +25,13 @@ std::string readSongLyrics(http::HttpRequest req);
 
 std::string readSongAudio(http::HttpRequest req);
 
-
 std::string readFileData(const std::string &fileName, ResourceType  type);
 
 bool exist(const std::string &fileName, ResourceType type);
 
 std::pair<int, int> parseRangeHeader(const std::string &rangeHeader, int totalSize);
 
+std::string urlDecode(const std::string str);
 
 } // namespace handle
 
